@@ -13,6 +13,7 @@
 (source 'melpa)
 
 (depends-on "emacs" "27.1")
+(depends-on "eglot")
 (depends-on "sideline")
 (depends-on "ht")
 

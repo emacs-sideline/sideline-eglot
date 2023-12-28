@@ -6,7 +6,7 @@
 ;; Maintainer: Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; URL: https://github.com/emacs-sideline/sideline-eglot
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "27.1") (sideline "0.1.0") (ht "2.4"))
+;; Package-Requires: ((emacs "27.1") (eglot "1.12.29") (sideline "0.1.0") (ht "2.4"))
 ;; Keywords: convenience eglot
 
 ;; This file is not part of GNU Emacs.
@@ -80,9 +80,9 @@ Argument COMMAND is required in sideline backend."
             (command (cl-getf matching-code-action :command))
             (server (eglot-current-server)))
          (sideline-eglot--inhibit-timeout
-           (eglot-execute-command server
-                                  (cl-getf command :command)
-                                  (cl-getf command :arguments))))))))
+          (eglot-execute-command server
+                                 (cl-getf command :command)
+                                 (cl-getf command :arguments))))))))
 
 (provide 'sideline-eglot)
 ;;; sideline-eglot.el ends here
