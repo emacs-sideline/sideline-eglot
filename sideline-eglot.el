@@ -60,8 +60,8 @@
   (if sideline-eglot--ht-candidates
       (ht-clear sideline-eglot--ht-candidates)
     (setq sideline-eglot--ht-candidates (ht-create)))
-  (dolist (row (eglot-code-actions (point)))
-    (ht-set sideline-eglot--ht-candidates (getf row :title) row))
+  (dolist (row (ignore-errors (eglot-code-actions (point))))
+    (ht-set sideline-eglot--ht-candidates (cl-getf row :title) row))
   (funcall callback (ht-keys sideline-eglot--ht-candidates)))
 
 ;;;###autoload
@@ -77,12 +77,12 @@ Argument COMMAND is required in sideline backend."
      (lambda (candidate &rest _)
        (when-let*
            ((matching-code-action (ht-get sideline-eglot--ht-candidates candidate))
-            (command (getf matching-code-action :command))
+            (command (cl-getf matching-code-action :command))
             (server (eglot-current-server)))
          (sideline-eglot--inhibit-timeout
            (eglot-execute-command server
-                                  (getf command :command)
-                                  (getf command :arguments))))))))
+                                  (cl-getf command :command)
+                                  (cl-getf command :arguments))))))))
 
 (provide 'sideline-eglot)
 ;;; sideline-eglot.el ends here
