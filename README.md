@@ -6,6 +6,16 @@
 
 [![CI](https://github.com/emacs-sideline/sideline-eglot/actions/workflows/test.yml/badge.svg)](https://github.com/emacs-sideline/sideline-eglot/actions/workflows/test.yml)
 
+## 🔨 Quickstart
+
+```elisp
+(use-package sideline
+  :init
+  (setq sideline-backends-right '(sideline-eglot)))
+  
+(use-package eglot :hook (eglot-mode . sideline-mode))  ; enable it when eglot is on
+```
+
 ## 🛠️ Contribute
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
