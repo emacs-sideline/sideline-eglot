@@ -11,7 +11,7 @@
 ## 🔨 Quickstart
 
 ```elisp
-(use-package sideline
+(use-package sideline-eglot
   :init
   (setq sideline-backends-right '(sideline-eglot)))
   
