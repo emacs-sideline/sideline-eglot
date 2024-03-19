@@ -71,7 +71,7 @@
 Argument COMMAND is required in sideline backend."
   (cl-case command
     (`candidates
-     (when (bound-and-true-p eglot--managed-mode)  ; check connection
+     (when (eglot-current-server) ; check connection
        (cons :async #'sideline-eglot--async-candidates)))
     (`action
      (lambda (candidate &rest _)
