@@ -44,6 +44,12 @@
   :group 'tool
   :link '(url-link :tag "Repository" "https://github.com/emacs-sideline/sideline-eglot"))
 
+(defcustom sideline-eglot-code-actions-prefix "💡 "
+  "Prefix to insert before the code action title.
+This can be used to insert, for example, an unicode character: 💡"
+  :type 'string
+  :group 'sideline-lsp)
+
 (defmacro sideline-eglot--inhibit-timeout (&rest body)
   "Execute BODY and avoid eglot timeout.."
   (declare (indent 0) (debug t))
@@ -57,12 +63,28 @@
 
 (defun sideline-eglot--async-candidates (callback &rest _)
   "Request eglot's candidates."
-  (if sideline-eglot--ht-candidates
-      (ht-clear sideline-eglot--ht-candidates)
-    (setq sideline-eglot--ht-candidates (ht-create)))
-  (dolist (row (ignore-errors (eglot-code-actions (point))))
-    (ht-set sideline-eglot--ht-candidates (cl-getf row :title) row))
-  (funcall callback (ht-keys sideline-eglot--ht-candidates)))
+  (jsonrpc-async-request
+   (eglot-current-server)
+   :textDocument/codeAction
+   (list :textDocument (eglot--TextDocumentIdentifier)
+         :range (list :start (eglot--pos-to-lsp-position (point))
+                      :end (eglot--pos-to-lsp-position nil))
+         :context
+         `(:diagnostics
+           [,@(cl-loop for diag in (flymake-diagnostics (point) nil)
+                       when (cdr (assoc 'eglot-lsp-diag
+                                        (eglot--diag-data diag)))
+                       collect it)]))
+   :success-fn
+   (lambda (resp)
+     (let ((actions (append resp nil)))
+       (if sideline-eglot--ht-candidates
+           (ht-clear sideline-eglot--ht-candidates)
+         (setq sideline-eglot--ht-candidates (ht-create)))
+       (dolist (row actions)
+         (ht-set sideline-eglot--ht-candidates (cl-getf row :title) row))
+       (funcall callback (ht-keys sideline-eglot--ht-candidates))))
+   :deferred :textDocument/codeAction))
 
 ;;;###autoload
 (defun sideline-eglot (command)
