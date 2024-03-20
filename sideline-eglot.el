@@ -47,7 +47,8 @@
 (defcustom sideline-eglot-code-actions-prefix "💡 "
   "Prefix to insert before the code action title.
 This can be used to insert, for example, an unicode character: 💡"
-  :type 'string
+  :type '(choice string
+                 (const :tag "Disabled" nil))
   :group 'sideline-lsp)
 
 (defmacro sideline-eglot--inhibit-timeout (&rest body)
@@ -61,8 +62,11 @@ This can be used to insert, for example, an unicode character: 💡"
 (defvar-local sideline-eglot--ht-candidates nil
   "Holds candidates.")
 
+(defvar sideline-eglot--callback)
+
 (defun sideline-eglot--async-candidates (callback &rest _)
   "Request eglot's candidates."
+  (setq sideline-eglot--callback callback)
   (jsonrpc-async-request
    (eglot-current-server)
    :textDocument/codeAction
@@ -82,8 +86,11 @@ This can be used to insert, for example, an unicode character: 💡"
            (ht-clear sideline-eglot--ht-candidates)
          (setq sideline-eglot--ht-candidates (ht-create)))
        (dolist (row actions)
-         (ht-set sideline-eglot--ht-candidates (cl-getf row :title) row))
-       (funcall callback (ht-keys sideline-eglot--ht-candidates))))
+         (ht-set sideline-eglot--ht-candidates
+                 (concat sideline-eglot-code-actions-prefix
+                         (cl-getf row :title))
+                 row))
+       (funcall sideline-eglot--callback (ht-keys sideline-eglot--ht-candidates))))
    :deferred :textDocument/codeAction))
 
 ;;;###autoload
