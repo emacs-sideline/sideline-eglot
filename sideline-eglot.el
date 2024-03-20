@@ -47,9 +47,10 @@
 (defcustom sideline-eglot-code-actions-prefix "💡 "
   "Prefix to insert before the code action title.
 This can be used to insert, for example, an unicode character: 💡"
-  :type '(choice string
-                 (const :tag "Disabled" nil))
-  :group 'sideline-lsp)
+  :type '(choice 
+          string
+          (const :tag "Disabled" nil))
+  :group 'sideline-eglot)
 
 (defmacro sideline-eglot--inhibit-timeout (&rest body)
   "Execute BODY and avoid eglot timeout.."
