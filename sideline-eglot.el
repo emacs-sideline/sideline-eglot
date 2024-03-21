@@ -60,7 +60,7 @@ This can be used to insert, for example, an unicode character: 💡"
      ,@body
      (advice-remove 'y-or-n-p #'always)))
 
-(defvar-local sideline-eglot--ht-candidates nil
+(defvar sideline-eglot--ht-candidates nil
   "Holds candidates.")
 
 (defvar sideline-eglot--callback)
