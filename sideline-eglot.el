@@ -47,7 +47,7 @@
 (defcustom sideline-eglot-code-actions-prefix "💡 "
   "Prefix to insert before the code action title.
 This can be used to insert, for example, an unicode character: 💡"
-  :type '(choice 
+  :type '(choice
           string
           (const :tag "Disabled" nil))
   :group 'sideline-eglot)
@@ -66,7 +66,7 @@ This can be used to insert, for example, an unicode character: 💡"
 (defvar sideline-eglot--callback)
 
 (defun sideline-eglot--async-candidates (callback &rest _)
-  "Request eglot's candidates."
+  "Request eglot's CALLBACK candidates."
   (setq sideline-eglot--callback callback)
   (jsonrpc-async-request
    (eglot-current-server)
