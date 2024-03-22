@@ -60,39 +60,38 @@ This can be used to insert, for example, an unicode character: 💡"
      ,@body
      (advice-remove 'y-or-n-p #'always)))
 
-(defvar sideline-eglot--ht-candidates nil
+(defvar-local sideline-eglot--ht-candidates nil
   "Holds candidates.")
 
-(defvar sideline-eglot--callback)
-
 (defun sideline-eglot--async-candidates (callback &rest _)
-  "Request eglot's CALLBACK candidates."
-  (setq sideline-eglot--callback callback)
-  (jsonrpc-async-request
-   (eglot-current-server)
-   :textDocument/codeAction
-   (list :textDocument (eglot--TextDocumentIdentifier)
-         :range (list :start (eglot--pos-to-lsp-position (point))
-                      :end (eglot--pos-to-lsp-position nil))
-         :context
-         `(:diagnostics
-           [,@(cl-loop for diag in (flymake-diagnostics (point) nil)
-                       when (cdr (assoc 'eglot-lsp-diag
-                                        (eglot--diag-data diag)))
-                       collect it)]))
-   :success-fn
-   (lambda (resp)
-     (let ((actions (append resp nil)))
-       (if sideline-eglot--ht-candidates
-           (ht-clear sideline-eglot--ht-candidates)
-         (setq sideline-eglot--ht-candidates (ht-create)))
-       (dolist (row actions)
-         (ht-set sideline-eglot--ht-candidates
-                 (concat sideline-eglot-code-actions-prefix
-                         (cl-getf row :title))
-                 row))
-       (funcall sideline-eglot--callback (ht-keys sideline-eglot--ht-candidates))))
-   :deferred :textDocument/codeAction))
+  "Request eglot's candidates."
+  (let ((buffer (current-buffer)))
+    (jsonrpc-async-request
+     (eglot-current-server)
+     :textDocument/codeAction
+     (list :textDocument (eglot--TextDocumentIdentifier)
+           :range (list :start (eglot--pos-to-lsp-position (point))
+                        :end (eglot--pos-to-lsp-position nil))
+           :context
+           `(:diagnostics
+             [,@(cl-loop for diag in (flymake-diagnostics (point) nil)
+                         when (cdr (assoc 'eglot-lsp-diag
+                                          (eglot--diag-data diag)))
+                         collect it)]))
+     :success-fn
+     (lambda (resp)
+       (sideline--with-buffer buffer
+         (let ((actions (append resp nil)))
+           (if sideline-eglot--ht-candidates
+               (ht-clear sideline-eglot--ht-candidates)
+             (setq sideline-eglot--ht-candidates (ht-create)))
+           (dolist (row actions)
+             (ht-set sideline-eglot--ht-candidates
+                     (concat sideline-eglot-code-actions-prefix
+                             (cl-getf row :title))
+                     row))
+           (funcall callback (ht-keys sideline-eglot--ht-candidates)))))
+     :deferred :textDocument/codeAction)))
 
 ;;;###autoload
 (defun sideline-eglot (command)
@@ -110,9 +109,9 @@ Argument COMMAND is required in sideline backend."
             (command (cl-getf matching-code-action :command))
             (server (eglot-current-server)))
          (sideline-eglot--inhibit-timeout
-          (eglot-execute-command server
-                                 (cl-getf command :command)
-                                 (cl-getf command :arguments))))))))
+           (eglot-execute-command server
+                                  (cl-getf command :command)
+                                  (cl-getf command :arguments))))))))
 
 (provide 'sideline-eglot)
 ;;; sideline-eglot.el ends here
