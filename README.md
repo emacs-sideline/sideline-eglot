@@ -18,6 +18,11 @@
 (use-package eglot :hook (eglot-mode . sideline-mode))  ; enable it when eglot is on
 ```
 
+## 🔧 Customization
+### 🧪 Variables
+
+* `sideline-eglot-code-actions-prefix` - Prefix to insert before the code action title.
+
 ## 🛠️ Contribute
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
