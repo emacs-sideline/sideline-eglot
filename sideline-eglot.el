@@ -38,6 +38,8 @@
 (require 'eglot)
 (require 'sideline)
 
+(declare-function eglot-execute "eglot")
+
 (defgroup sideline-eglot nil
   "Show eglot information with sideline."
   :prefix "sideline-eglot-"
