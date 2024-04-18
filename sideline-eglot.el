@@ -109,9 +109,7 @@ Argument COMMAND is required in sideline backend."
             (command (cl-getf matching-code-action :command))
             (server (eglot-current-server)))
          (sideline-eglot--inhibit-timeout
-           (eglot-execute-command server
-                                  (cl-getf command :command)
-                                  (cl-getf command :arguments))))))))
+           (eglot-execute server command)))))))
 
 (provide 'sideline-eglot)
 ;;; sideline-eglot.el ends here
