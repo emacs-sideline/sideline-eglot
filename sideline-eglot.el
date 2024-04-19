@@ -38,6 +38,8 @@
 (require 'eglot)
 (require 'sideline)
 
+(declare-function eglot-execute "eglot")
+
 (defgroup sideline-eglot nil
   "Show eglot information with sideline."
   :prefix "sideline-eglot-"
@@ -109,9 +111,11 @@ Argument COMMAND is required in sideline backend."
             (command (cl-getf matching-code-action :command))
             (server (eglot-current-server)))
          (sideline-eglot--inhibit-timeout
-           (eglot-execute-command server
-                                  (cl-getf command :command)
-                                  (cl-getf command :arguments))))))))
+          (if (fboundp #'eglot-execute)
+              (eglot-execute server command)
+            (eglot-execute-command server
+                                   (cl-getf command :command)
+                                   (cl-getf command :arguments)))))))))
 
 (provide 'sideline-eglot)
 ;;; sideline-eglot.el ends here
