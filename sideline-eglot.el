@@ -82,7 +82,7 @@ This can be used to insert, for example, an unicode character: 💡"
                          collect it)]))
      :success-fn
      (lambda (resp)
-       (sideline--with-buffer buffer
+       (sideline--with-buffer-window buffer
          (let ((actions (append resp nil)))
            (if sideline-eglot--ht-candidates
                (ht-clear sideline-eglot--ht-candidates)
@@ -111,11 +111,11 @@ Argument COMMAND is required in sideline backend."
             (command (cl-getf matching-code-action :command))
             (server (eglot-current-server)))
          (sideline-eglot--inhibit-timeout
-          (if (fboundp #'eglot-execute)
-              (eglot-execute server command)
-            (eglot-execute-command server
-                                   (cl-getf command :command)
-                                   (cl-getf command :arguments)))))))))
+           (if (fboundp #'eglot-execute)
+               (eglot-execute server command)
+             (eglot-execute-command server
+                                    (cl-getf command :command)
+                                    (cl-getf command :arguments)))))))))
 
 (provide 'sideline-eglot)
 ;;; sideline-eglot.el ends here
