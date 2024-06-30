@@ -19,6 +19,7 @@
 ```
 
 ## 🔧 Customization
+
 ### 🧪 Variables
 
 * `sideline-eglot-code-actions-prefix` - Prefix to insert before the code action title.
