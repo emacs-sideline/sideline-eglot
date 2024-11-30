@@ -6,7 +6,7 @@
 ;; Maintainer: Shen, Jen-Chieh <jcs090218@gmail.com>
 ;; URL: https://github.com/emacs-sideline/sideline-eglot
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "27.1") (eglot "1.12.29") (sideline "0.1.0") (ht "2.4"))
+;; Package-Requires: ((emacs "28.1") (eglot "1.12.29") (sideline "0.1.0") (ht "2.4"))
 ;; Keywords: convenience eglot
 
 ;; This file is not part of GNU Emacs.
