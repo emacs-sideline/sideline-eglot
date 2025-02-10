@@ -74,7 +74,9 @@ This can be used to insert, for example, an unicode character: 💡"
   "Holds candidates.")
 
 (defun sideline-eglot--async-candidates (callback &rest _)
-  "Request eglot's candidates."
+  "Request eglot's candidates.
+
+The argument CALLBACK is used to display `sideline' information."
   (let ((buffer (current-buffer)))
     (jsonrpc-async-request
      (eglot-current-server)
