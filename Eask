@@ -1,3 +1,5 @@
+;; -*- mode: eask; lexical-binding: t -*-
+
 (package "sideline-eglot"
          "0.1.0"
          "Show eglot information with sideline")
