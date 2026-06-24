@@ -122,11 +122,10 @@ Argument COMMAND is required in sideline backend."
          (sideline-eglot--inhibit-timeout
            (if (fboundp #'eglot-execute)
                (eglot-execute server matching-code-action)
-             (when-let*
-                 ((command (cl-getf matching-code-action :command)))
-               (eglot-execute-command server
-                                      (cl-getf command :command)
-                                      (cl-getf command :arguments))))))))))
+             (when-let* ((command (cl-getf matching-code-action :command)))
+               (eglot-execute server
+                              `( :command ,(format "%s" (cl-getf command :command))
+                                 :arguments ,(cl-getf command :arguments)))))))))))
 
 (provide 'sideline-eglot)
 ;;; sideline-eglot.el ends here
